@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -45,7 +47,7 @@ public class MainActivity extends AppCompatActivity
         // Initialise componentsList
         componentsList = new ArrayList<>();
 
-        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+        drawerLayout = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close
@@ -55,6 +57,16 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        if (savedInstanceState == null) {
+            FragmentManager manager = getSupportFragmentManager();
+            FragmentTransaction transaction = manager.beginTransaction();
+            HomeFragment homeFragment = new HomeFragment();
+            transaction.replace(R.id.main_fragment_target, homeFragment);
+            transaction.commit();
+
+            navigationView.setCheckedItem(R.id.nav_home);
+        }
     }
 
     @Override
@@ -69,9 +81,16 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.nav_home) {
+            FragmentManager manager = getSupportFragmentManager();
+            FragmentTransaction transaction = manager.beginTransaction();
+            HomeFragment homeFragment = new HomeFragment();
+            transaction.replace(R.id.main_fragment_target, homeFragment);
+            transaction.commit();
+        }
 
-
-        return false;
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     private class Task implements Runnable {
