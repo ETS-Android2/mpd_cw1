@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/home_vector"
+            android:title="@string/nav_home_title"/>
+        <item
+            android:id="@+id/nav_current_roadworks"
+            android:icon="@drawable/roadworks_vector"
+            android:title="@string/nav_current_roadworks_title"/>
+        <item
+            android:id="@+id/nav_planned_roadworks"
+            android:icon="@drawable/planned_roadworks_vector"
+            android:title= "@string/nav_planned_roadworks_title"/>
+        <item
+            android:id="@+id/nav_current_incidents"
+            android:icon="@drawable/incidents_vector"
+            android:title="@string/nav_current_incidents_title"/>
+    </group>
+</menu>

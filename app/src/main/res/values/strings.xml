@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">McLean_Ross_S2030507</string>
     <string name="toolbar_title">Traffic Scotland</string>
+
+    <string name="navigation_drawer_open">Open</string>
+    <string name="navigation_drawer_close">Close</string>
+    <string name="nav_home_title">Home</string>
+    <string name="nav_current_roadworks_title">Current Roadworks</string>
+    <string name="nav_planned_roadworks_title">Planned Roadworks</string>
+    <string name="nav_current_incidents_title">Current Incidents</string>
 </resources>
