@@ -8,10 +8,16 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationView;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
@@ -20,7 +26,7 @@ public class MainActivity extends AppCompatActivity
     private String roadworksUrl = "https://trafficscotland.org/rss/feeds/roadworks.aspx";
     private String plannedRoadworksUrl = "https://trafficscotland.org/rss/feeds/plannedroadworks.aspx";
     private String currentIncidentsUrl = "https://trafficscotland.org/rss/feeds/currentincidents.aspx";
-    private String urlValue;
+    private String result = "";
 
     DrawerLayout drawerLayout;
     ArrayList<ListComponent> componentsList;
@@ -63,6 +69,36 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+
         return false;
+    }
+
+    private class Task implements Runnable {
+        private String url;
+
+        public Task(String url) {
+            this.url = url;
+        }
+
+        @Override
+        public void run() {
+            URL url = null;
+            URLConnection urlConnection;
+            BufferedReader bufferedReader = null;
+            String inputLine = "";
+
+            try {
+                url = new URL(this.url);
+                urlConnection = url.openConnection();
+                bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+
+                while ((inputLine = bufferedReader.readLine()) != null) result += inputLine;
+                bufferedReader.close();
+
+            } catch (IOException ioException) {
+                Log.e("IOException Tag", "IOException in run()");
+            }
+        }
     }
 }
