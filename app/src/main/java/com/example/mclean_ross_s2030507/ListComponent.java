@@ -7,6 +7,7 @@ import java.util.Date;
 
 public class ListComponent {
     // Values are based on request response data values of Traffic Scotland feeds
+    private int id;
     private String title;
     private String description;
     private String link;
