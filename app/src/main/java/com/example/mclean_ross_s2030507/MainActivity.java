@@ -1,7 +1,6 @@
 package com.example.mclean_ross_s2030507;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -10,7 +9,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -31,13 +29,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener {
-    // Store Traffic Scotland links
-    private String roadworksUrl = "https://trafficscotland.org/rss/feeds/roadworks.aspx";
-    private String plannedRoadworksUrl = "https://trafficscotland.org/rss/feeds/plannedroadworks.aspx";
-    private String currentIncidentsUrl = "https://trafficscotland.org/rss/feeds/currentincidents.aspx";
     private String result = "";
 
     DrawerLayout drawerLayout;
@@ -111,32 +106,36 @@ public class MainActivity extends AppCompatActivity
         componentsList.clear();
         result = "";
         if (isCurrentRoadworks) {
-            new Thread(new Task(roadworksUrl, true)).start();
+            // Store Traffic Scotland links
+            String roadworksUrl = "https://trafficscotland.org/rss/feeds/roadworks.aspx";
+            new Thread(new Task(roadworksUrl)).start();
         }
-        else new Thread(new Task(plannedRoadworksUrl, true)).start();
+        else {
+            String plannedRoadworksUrl = "https://trafficscotland.org/rss/feeds/plannedroadworks.aspx";
+            new Thread(new Task(plannedRoadworksUrl)).start();
+        }
     }
 
     public void triggerParseIncidentsData() {
         componentsList.clear();
         result = "";
-        new Thread(new Task(currentIncidentsUrl, false)).start();
+        String currentIncidentsUrl = "https://trafficscotland.org/rss/feeds/currentincidents.aspx";
+        new Thread(new Task(currentIncidentsUrl)).start();
     }
 
     private class Task implements Runnable {
-        private String url;
-        private boolean isRoadworks;
+        private final String url;
 
-        public Task(String url, boolean isRoadworks) {
+        public Task(String url) {
             this.url = url;
-            this.isRoadworks = isRoadworks;
         }
 
         @Override
         public void run() {
-            URL url = null;
+            URL url;
             URLConnection urlConnection;
-            BufferedReader bufferedReader = null;
-            String inputLine = "";
+            BufferedReader bufferedReader;
+            String inputLine;
             try {
                 url = new URL(this.url);
                 urlConnection = url.openConnection();
@@ -147,26 +146,20 @@ public class MainActivity extends AppCompatActivity
                 Log.e("IOException Tag", "IOException in run()");
             }
 
-            if (isRoadworks) parseRoadworksData(result);
-//            else parseIncidentsData(result);
+            parseXmlData(result);
 
-            MainActivity.this.runOnUiThread(new Runnable() {
-                public void run() {
-                    if (isRoadworks) {
-                        FragmentManager manager = getSupportFragmentManager();
-                        FragmentTransaction transaction = manager.beginTransaction();
-                        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                        ComponentListFragment componentListFragment = new ComponentListFragment(componentsList);
-                        transaction.replace(R.id.main_fragment_target, componentListFragment);
-                        transaction.commit();
-
-                    }
-                }
+            MainActivity.this.runOnUiThread(() -> {
+                FragmentManager manager = getSupportFragmentManager();
+                FragmentTransaction transaction = manager.beginTransaction();
+                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                ComponentListFragment componentListFragment = new ComponentListFragment(componentsList);
+                transaction.replace(R.id.main_fragment_target, componentListFragment);
+                transaction.commit();
             });
         }
     }
 
-    private void parseRoadworksData(String input) {
+    private void parseXmlData(String input) {
         try {
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
             factory.setNamespaceAware(true);
@@ -180,7 +173,7 @@ public class MainActivity extends AppCompatActivity
             String geoRssPoint = "";
             String author = "";
             String comments = "";
-            String publishDate = "";
+            String publishDate;
 
             boolean isInsideXmlItem = false;
             Date newDate = null;
@@ -207,7 +200,7 @@ public class MainActivity extends AppCompatActivity
                     }else if (xpp.getName().equalsIgnoreCase("pubdate")) {
                         if (isInsideXmlItem) {
                             publishDate = xpp.nextText();
-                            SimpleDateFormat dateParser = new SimpleDateFormat("EEEE, dd MMM yyyy");
+                            SimpleDateFormat dateParser = new SimpleDateFormat("EEEE, dd MMM yyyy", Locale.ENGLISH);
                             newDate = dateParser.parse(publishDate);
                         }
                     }
