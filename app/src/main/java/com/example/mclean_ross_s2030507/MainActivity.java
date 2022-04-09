@@ -1,5 +1,10 @@
 package com.example.mclean_ross_s2030507;
 
+import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
+import android.widget.LinearLayout;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,10 +13,6 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-
-import android.os.Bundle;
-import android.util.Log;
-import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -87,6 +88,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.nav_home) {
+            // Remove searchbar
+            LinearLayout view = findViewById(R.id.search_view_target);
+            view.removeAllViews();
+
             FragmentManager manager = getSupportFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             HomeFragment homeFragment = new HomeFragment();
