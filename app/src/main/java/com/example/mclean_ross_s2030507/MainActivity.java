@@ -31,7 +31,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -81,9 +80,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed () {
-        DrawerLayout drawer = findViewById(R.id. drawer_layout) ;
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed() ;
         }
@@ -155,10 +153,6 @@ public class MainActivity extends AppCompatActivity
             parseXmlData(result);
 
             MainActivity.this.runOnUiThread(() -> {
-//                Intent intent = new Intent(getApplicationContext(), ComponentListActivity.class);
-//                intent.putParcelableArrayListExtra("data", (ArrayList) componentsList);
-//                startActivity(intent);
-
                 FragmentManager manager = getSupportFragmentManager();
                 FragmentTransaction transaction = manager.beginTransaction();
                 transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
@@ -186,11 +180,9 @@ public class MainActivity extends AppCompatActivity
             String author = "";
             String comments = "";
             String publishDate;
-            String formattedDate = null;
             LocalDate actualDate = null;
 
             boolean isInsideXmlItem = false;
-            LocalDate newDate = null;
 
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 if (eventType == XmlPullParser.START_TAG) {
@@ -217,7 +209,6 @@ public class MainActivity extends AppCompatActivity
                             publishDate = xpp.nextText();
                             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("EEE, d MMM yyyy HH:mm:ss zzz", Locale.ENGLISH);
                             actualDate = LocalDate.parse(publishDate, dtf);
-                            formattedDate = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).format(actualDate);
                         }
                     }
                 } else if (eventType == XmlPullParser.END_TAG) {

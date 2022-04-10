@@ -28,10 +28,8 @@ import java.util.Locale;
  */
 public class ComponentListFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
-    private int mColumnCount = 1;
     private ArrayList<ListComponent> components;
     ComponentRecyclerViewAdapter adapter;
-    private Menu menu;
     LocalDate localDate;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -58,7 +56,7 @@ public class ComponentListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+            int mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
     }
 
@@ -77,7 +75,7 @@ public class ComponentListFragment extends Fragment {
                     new DividerItemDecoration(recyclerView.getContext(),
                     linearLayoutManager.getOrientation())
             );
-            adapter = new ComponentRecyclerViewAdapter(getActivity(), components);
+            adapter = new ComponentRecyclerViewAdapter(requireActivity(), components);
             recyclerView.setLayoutManager(linearLayoutManager);
             recyclerView.setAdapter(adapter);
         }
@@ -87,20 +85,19 @@ public class ComponentListFragment extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        this.menu = menu;
+    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_main, menu);
         MenuItem search = menu.findItem(R.id.search);
         androidx.appcompat.widget.SearchView searchView = (androidx.appcompat.widget.SearchView) search.getActionView();
         searchView.setQueryHint("Search here");
         search(searchView);
 
-        MaterialDatePicker.Builder materialDateBuilder = MaterialDatePicker.Builder.datePicker();
+        MaterialDatePicker.Builder<Long> materialDateBuilder = MaterialDatePicker.Builder.datePicker();
         materialDateBuilder.setTitleText("Select a date");
-        final MaterialDatePicker materialDatePicker = materialDateBuilder.build();
+        final MaterialDatePicker<Long> materialDatePicker = materialDateBuilder.build();
 
         menu.findItem(R.id.date_picker_button).setOnMenuItemClickListener(menuItem -> {
-            materialDatePicker.show(getActivity().getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
+            materialDatePicker.show(requireActivity().getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
             return true;
         });
 
@@ -132,7 +129,7 @@ public class ComponentListFragment extends Fragment {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         return super.onOptionsItemSelected(item);
     }
 

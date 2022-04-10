@@ -1,12 +1,11 @@
 package com.example.mclean_ross_s2030507;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.fragment.app.Fragment;
 
 public class HomeFragment extends Fragment {
     public HomeFragment() {
@@ -14,8 +13,7 @@ public class HomeFragment extends Fragment {
     }
 
     public static HomeFragment newInstance(String param1, String param2) {
-        HomeFragment fragment = new HomeFragment();
-        return fragment;
+        return new HomeFragment();
     }
 
     @Override

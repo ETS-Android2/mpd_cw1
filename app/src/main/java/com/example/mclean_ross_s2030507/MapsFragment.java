@@ -17,10 +17,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsFragment extends Fragment {
-    private String geoRssPoint, title;
-    private GoogleMap gMap;
+    private final String geoRssPoint;
+    private final String title;
 
-    private OnMapReadyCallback callback = new OnMapReadyCallback() {
+    private final OnMapReadyCallback callback = new OnMapReadyCallback() {
 
         /**
          * Manipulates the map once available.
@@ -33,7 +33,6 @@ public class MapsFragment extends Fragment {
          */
         @Override
         public void onMapReady(GoogleMap googleMap) {
-            gMap = googleMap;
             LatLng glasgow = new LatLng(55.787753, -3.925677);
             googleMap.addMarker(new MarkerOptions().position(glasgow).title("Marker in Glasgow, Scotland"));
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(glasgow));
@@ -41,12 +40,12 @@ public class MapsFragment extends Fragment {
 
             int space = geoRssPoint.indexOf(" ");
             double lat = Double.parseDouble(geoRssPoint.substring(0, space));
-            double lon = Double.parseDouble(geoRssPoint.substring(space + 1, geoRssPoint.length()));
+            double lon = Double.parseDouble(geoRssPoint.substring(space + 1));
             LatLng target = new LatLng(lat, lon);
 
-            gMap.addMarker(new MarkerOptions().position(target).title(title));
-            gMap.moveCamera(CameraUpdateFactory.newLatLng(target));
-            gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(target, 13));
+            googleMap.addMarker(new MarkerOptions().position(target).title(title));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(target));
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(target, 13));
         }
     };
 
