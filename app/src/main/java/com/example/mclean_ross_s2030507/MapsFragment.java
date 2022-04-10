@@ -1,13 +1,13 @@
 package com.example.mclean_ross_s2030507;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -17,6 +17,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsFragment extends Fragment {
+    private String geoRssPoint, title;
+    private GoogleMap gMap;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
@@ -31,11 +33,27 @@ public class MapsFragment extends Fragment {
          */
         @Override
         public void onMapReady(GoogleMap googleMap) {
-            LatLng sydney = new LatLng(-34, 151);
-            googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+            gMap = googleMap;
+            LatLng glasgow = new LatLng(55.787753, -3.925677);
+            googleMap.addMarker(new MarkerOptions().position(glasgow).title("Marker in Glasgow, Scotland"));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(glasgow));
+
+
+            int space = geoRssPoint.indexOf(" ");
+            double lat = Double.parseDouble(geoRssPoint.substring(0, space));
+            double lon = Double.parseDouble(geoRssPoint.substring(space + 1, geoRssPoint.length()));
+            LatLng target = new LatLng(lat, lon);
+
+            gMap.addMarker(new MarkerOptions().position(target).title(title));
+            gMap.moveCamera(CameraUpdateFactory.newLatLng(target));
+            gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(target, 80));
         }
     };
+
+    public MapsFragment(String geoRssPoint, String title) {
+        this.geoRssPoint = geoRssPoint;
+        this.title = title;
+    }
 
     @Nullable
     @Override

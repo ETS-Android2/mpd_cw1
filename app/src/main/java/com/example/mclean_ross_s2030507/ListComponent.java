@@ -2,9 +2,6 @@ package com.example.mclean_ross_s2030507;
 
 import androidx.annotation.NonNull;
 
-import java.util.ArrayList;
-import java.util.Date;
-
 public class ListComponent {
     // Values are based on request response data values of Traffic Scotland feeds
     private int id;
@@ -14,7 +11,7 @@ public class ListComponent {
     private String geoRssPoint;
     private String author;
     private String comments;
-    private Date publicationDate;
+    private String publicationDate;
 
 
     public ListComponent(String title,
@@ -23,7 +20,7 @@ public class ListComponent {
                          String geoRssPoint,
                          String author,
                          String comments,
-                         Date publicationDate) {
+                         String publicationDate) {
         this.title = title;
         this.description = description;
         this.link = link;
@@ -81,13 +78,9 @@ public class ListComponent {
         this.comments = comments;
     }
 
-    public Date getPublicationDate() {
-        return publicationDate;
-    }
+    public String getPublicationDate() { return publicationDate; }
 
-    public void setPublicationDate(Date publicationDate) {
-        this.publicationDate = publicationDate;
-    }
+    public void setPublicationDate(String publicationDate) { this.publicationDate = publicationDate; }
 
     @NonNull
     public String toString() {

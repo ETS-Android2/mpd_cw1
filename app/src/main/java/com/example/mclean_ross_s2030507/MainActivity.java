@@ -1,11 +1,13 @@
 package com.example.mclean_ross_s2030507;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -23,17 +25,19 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.io.StringReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity
-    implements NavigationView.OnNavigationItemSelectedListener {
+    implements NavigationView.OnNavigationItemSelectedListener,
+        Serializable {
     private String result = "";
 
     DrawerLayout drawerLayout;
@@ -88,10 +92,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.nav_home) {
-            // Remove searchbar
-            LinearLayout view = findViewById(R.id.search_view_target);
-            view.removeAllViews();
-
             FragmentManager manager = getSupportFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             HomeFragment homeFragment = new HomeFragment();
@@ -135,6 +135,7 @@ public class MainActivity extends AppCompatActivity
             this.url = url;
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         public void run() {
             URL url;
@@ -154,16 +155,22 @@ public class MainActivity extends AppCompatActivity
             parseXmlData(result);
 
             MainActivity.this.runOnUiThread(() -> {
+//                Intent intent = new Intent(getApplicationContext(), ComponentListActivity.class);
+//                intent.putParcelableArrayListExtra("data", (ArrayList) componentsList);
+//                startActivity(intent);
+
                 FragmentManager manager = getSupportFragmentManager();
                 FragmentTransaction transaction = manager.beginTransaction();
                 transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 ComponentListFragment componentListFragment = new ComponentListFragment(componentsList);
                 transaction.replace(R.id.main_fragment_target, componentListFragment);
+                transaction.addToBackStack(null);
                 transaction.commit();
             });
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void parseXmlData(String input) {
         try {
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
@@ -179,9 +186,10 @@ public class MainActivity extends AppCompatActivity
             String author = "";
             String comments = "";
             String publishDate;
+            String formattedDate = null;
 
             boolean isInsideXmlItem = false;
-            Date newDate = null;
+            LocalDate newDate = null;
 
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 if (eventType == XmlPullParser.START_TAG) {
@@ -192,7 +200,8 @@ public class MainActivity extends AppCompatActivity
                     } else if (xpp.getName().equalsIgnoreCase("description")) {
                         if (isInsideXmlItem) {
                             description = xpp.nextText();
-                            description.replace("<br />", "\n");
+                            description = description.replace("<br />", "\n");
+                            description = description.replace(" - 00:00", "");
                         }
                     } else if (xpp.getName().equalsIgnoreCase("link")) {
                         if (isInsideXmlItem) link = xpp.nextText();
@@ -205,23 +214,26 @@ public class MainActivity extends AppCompatActivity
                     }else if (xpp.getName().equalsIgnoreCase("pubdate")) {
                         if (isInsideXmlItem) {
                             publishDate = xpp.nextText();
-                            SimpleDateFormat dateParser = new SimpleDateFormat("EEEE, dd MMM yyyy", Locale.ENGLISH);
-                            newDate = dateParser.parse(publishDate);
+                            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("EEE, d MMM yyyy HH:mm:ss zzz", Locale.ENGLISH);
+                            formattedDate = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).format(LocalDate.parse(publishDate, dtf));
                         }
                     }
                 } else if (eventType == XmlPullParser.END_TAG) {
                     if (xpp.getName().equalsIgnoreCase("item")) {
                         isInsideXmlItem = false;
                         ListComponent component = new ListComponent(
-                                title, description, link, geoRssPoint, author, comments, newDate
+                                title, description, link, geoRssPoint, author, comments, formattedDate
                         );
                         componentsList.add(component);
                     }
                 }
                 eventType = xpp.next();
             }
-        } catch (XmlPullParserException | IOException | ParseException e) {
+        } catch (XmlPullParserException | IOException e) {
             Log.e("Exception tag", "parseRoadworksData failed: " + e);
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) { return true; }
 }

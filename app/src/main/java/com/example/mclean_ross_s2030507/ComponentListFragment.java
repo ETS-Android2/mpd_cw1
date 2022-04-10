@@ -2,10 +2,11 @@ package com.example.mclean_ross_s2030507;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.SearchView;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -21,7 +22,7 @@ public class ComponentListFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount = 1;
     private ArrayList<ListComponent> components;
-
+    ComponentRecyclerViewAdapter adapter;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -46,7 +47,6 @@ public class ComponentListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
@@ -55,13 +55,7 @@ public class ComponentListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Insert SearchView
-        LinearLayout searchViewTarget = requireActivity().findViewById(R.id.search_view_target);
-        SearchView searchView = new SearchView(this.getContext());
-        searchView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
-        searchView.setQueryHint("Search here");
-        searchViewTarget.addView(searchView);
+        setHasOptionsMenu(true);
 
         // Set the adapter
         View view = inflater.inflate(R.layout.fragment_component_list_list, container, false);
@@ -73,32 +67,36 @@ public class ComponentListFragment extends Fragment {
                     new DividerItemDecoration(recyclerView.getContext(),
                     linearLayoutManager.getOrientation())
             );
-            MyItemRecyclerViewAdapter adapter = new MyItemRecyclerViewAdapter(components);
+            adapter = new ComponentRecyclerViewAdapter(getActivity(), components);
             recyclerView.setLayoutManager(linearLayoutManager);
             recyclerView.setAdapter(adapter);
-
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String query) {
-//                    ArrayList<String> componentTitles = new ArrayList<>();
-//                    for (ListComponent component : components) {
-//                        componentTitles.add(component.getTitle().toLowerCase().trim());
-//                    }
-//                    if (componentTitles.contains(query.toLowerCase())) {
-//                        adapter.getFilter().filter(query);
-//                    } else {
-//                        Toast.makeText(recyclerView.getContext(), "No Match found",Toast.LENGTH_LONG).show();
-//                    }
-                    return false;
-                }
-
-                @Override
-                public boolean onQueryTextChange(String newText) {
-                    adapter.getFilter().filter(newText);
-                    return false;
-                }
-            });
         }
         return view;
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_main, menu);
+        MenuItem search = menu.findItem(R.id.search);
+        androidx.appcompat.widget.SearchView searchView = (androidx.appcompat.widget.SearchView) search.getActionView();
+        searchView.setQueryHint("Search here");
+        search(searchView);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) { return super.onOptionsItemSelected(item); }
+
+    private void search(androidx.appcompat.widget.SearchView searchView) {
+        searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) { return false; }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.getFilter().filter(newText);
+                return false;
+            }
+        });
     }
 }
