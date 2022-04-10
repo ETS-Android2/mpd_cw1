@@ -4,7 +4,7 @@
 <!--10/04/22-->
 <androidx.recyclerview.widget.RecyclerView android:id="@+id/list"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:layout_marginLeft="0dp"
     android:layout_marginRight="0dp"
     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
