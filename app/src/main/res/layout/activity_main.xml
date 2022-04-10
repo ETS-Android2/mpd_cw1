@@ -27,12 +27,6 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:titleTextColor="#ffff"/>
 
-        <LinearLayout
-            android:id="@+id/search_view_target"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" />
-
         <FrameLayout
             android:id="@+id/main_fragment_target"
             android:layout_width="match_parent"

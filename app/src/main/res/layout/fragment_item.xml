@@ -30,7 +30,7 @@
 
 
         <TextView
-            android:text="Description"
+            android:text="@string/description"
             android:labelFor="@id/description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
             android:layout_marginBottom="16dp"/>
 
         <TextView
-            android:text="Link"
+            android:text="@string/link"
             android:labelFor="@id/link"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -72,7 +72,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"
-            android:text="Location"/>
+            android:text="@string/location"/>
 
         <FrameLayout
             android:id="@+id/maps_fragment_target"
