@@ -1,6 +1,9 @@
+<!--Ross McLean-->
+<!--S2030507-->
+<!--10/04/22-->
 <resources>
     <string name="app_name">McLean_Ross_S2030507</string>
-    <string name="toolbar_title">Traffic Scotland</string>
+    <string name="toolbar_title">McLean_Ross_S2030507</string>
 
     <string name="navigation_drawer_open">Open</string>
     <string name="navigation_drawer_close">Close</string>

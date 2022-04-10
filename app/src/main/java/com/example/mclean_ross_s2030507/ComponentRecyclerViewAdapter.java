@@ -1,3 +1,8 @@
+/*
+Ross McLean-->
+S2030507-->
+10/04/22
+*/
 package com.example.mclean_ross_s2030507;
 
 import android.annotation.SuppressLint;
@@ -17,7 +22,6 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mclean_ross_s2030507.databinding.FragmentComponentListItemBinding;
-import com.example.mclean_ross_s2030507.placeholder.PlaceholderContent.PlaceholderItem;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -25,9 +29,6 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link PlaceholderItem}.
- */
 public class ComponentRecyclerViewAdapter extends RecyclerView.Adapter<ComponentRecyclerViewAdapter.ViewHolder> implements Filterable {
 
     private final ArrayList<ListComponent> mValues;
