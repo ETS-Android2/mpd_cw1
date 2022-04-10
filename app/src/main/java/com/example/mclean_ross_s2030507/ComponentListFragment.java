@@ -1,6 +1,7 @@
 package com.example.mclean_ross_s2030507;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -8,10 +9,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.datepicker.MaterialDatePicker;
 
 import java.util.ArrayList;
 
@@ -23,6 +27,7 @@ public class ComponentListFragment extends Fragment {
     private int mColumnCount = 1;
     private ArrayList<ListComponent> components;
     ComponentRecyclerViewAdapter adapter;
+    private Menu menu;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -77,15 +82,56 @@ public class ComponentListFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        this.menu = menu;
         inflater.inflate(R.menu.menu_main, menu);
         MenuItem search = menu.findItem(R.id.search);
         androidx.appcompat.widget.SearchView searchView = (androidx.appcompat.widget.SearchView) search.getActionView();
         searchView.setQueryHint("Search here");
         search(searchView);
+
+        MaterialDatePicker.Builder materialDateBuilder = MaterialDatePicker.Builder.datePicker();
+        materialDateBuilder.setTitleText("Select a date");
+        final MaterialDatePicker materialDatePicker = materialDateBuilder.build();
+
+        menu.findItem(R.id.date_picker_button).setOnMenuItemClickListener(menuItem -> {
+            materialDatePicker.show(getActivity().getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
+            return true;
+        });
+
+        materialDatePicker.addOnPositiveButtonClickListener(selection -> {
+            materialDatePicker.getHeaderText();
+        });
+
+        menu.findItem(R.id.search).setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                menu.findItem(R.id.date_picker_button).setEnabled(false);
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                menu.findItem(R.id.date_picker_button).setEnabled(true);
+                return true;
+            }
+        });
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) { return super.onOptionsItemSelected(item); }
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        return super.onContextItemSelected(item);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.e("MYTAG", String.valueOf(item));
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+    }
 
     private void search(androidx.appcompat.widget.SearchView searchView) {
         searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
