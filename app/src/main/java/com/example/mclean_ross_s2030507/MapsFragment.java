@@ -46,7 +46,7 @@ public class MapsFragment extends Fragment {
 
             gMap.addMarker(new MarkerOptions().position(target).title(title));
             gMap.moveCamera(CameraUpdateFactory.newLatLng(target));
-            gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(target, 80));
+            gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(target, 13));
         }
     };
 

@@ -1,7 +1,7 @@
 package com.example.mclean_ross_s2030507;
 
+import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -17,7 +18,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.datepicker.MaterialDatePicker;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * A fragment representing a list of Items.
@@ -28,6 +32,7 @@ public class ComponentListFragment extends Fragment {
     private ArrayList<ListComponent> components;
     ComponentRecyclerViewAdapter adapter;
     private Menu menu;
+    LocalDate localDate;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -80,6 +85,7 @@ public class ComponentListFragment extends Fragment {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         this.menu = menu;
@@ -99,7 +105,10 @@ public class ComponentListFragment extends Fragment {
         });
 
         materialDatePicker.addOnPositiveButtonClickListener(selection -> {
-            materialDatePicker.getHeaderText();
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MMM d, yyyy", Locale.ENGLISH);
+            localDate = LocalDate.parse(materialDatePicker.getHeaderText(), dtf);
+//            Toast.makeText(getContext(), String.valueOf(localDate), Toast.LENGTH_LONG).show();
+            adapter.getFilter().filter(String.valueOf(localDate));
         });
 
         menu.findItem(R.id.search).setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
@@ -124,7 +133,6 @@ public class ComponentListFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.e("MYTAG", String.valueOf(item));
         return super.onOptionsItemSelected(item);
     }
 

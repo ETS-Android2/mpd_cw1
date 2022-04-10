@@ -187,6 +187,7 @@ public class MainActivity extends AppCompatActivity
             String comments = "";
             String publishDate;
             String formattedDate = null;
+            LocalDate actualDate = null;
 
             boolean isInsideXmlItem = false;
             LocalDate newDate = null;
@@ -215,14 +216,15 @@ public class MainActivity extends AppCompatActivity
                         if (isInsideXmlItem) {
                             publishDate = xpp.nextText();
                             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("EEE, d MMM yyyy HH:mm:ss zzz", Locale.ENGLISH);
-                            formattedDate = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).format(LocalDate.parse(publishDate, dtf));
+                            actualDate = LocalDate.parse(publishDate, dtf);
+                            formattedDate = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).format(actualDate);
                         }
                     }
                 } else if (eventType == XmlPullParser.END_TAG) {
                     if (xpp.getName().equalsIgnoreCase("item")) {
                         isInsideXmlItem = false;
                         ListComponent component = new ListComponent(
-                                title, description, link, geoRssPoint, author, comments, formattedDate
+                                title, description, link, geoRssPoint, author, comments, actualDate
                         );
                         componentsList.add(component);
                     }

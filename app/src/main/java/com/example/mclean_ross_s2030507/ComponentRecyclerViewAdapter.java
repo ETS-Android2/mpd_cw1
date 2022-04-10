@@ -1,6 +1,8 @@
 package com.example.mclean_ross_s2030507;
 
 import android.annotation.SuppressLint;
+import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.Filter;
@@ -8,6 +10,7 @@ import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -16,7 +19,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mclean_ross_s2030507.databinding.FragmentComponentListItemBinding;
 import com.example.mclean_ross_s2030507.placeholder.PlaceholderContent.PlaceholderItem;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.regex.Pattern;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link PlaceholderItem}.
@@ -33,6 +40,7 @@ public class ComponentRecyclerViewAdapter extends RecyclerView.Adapter<Component
         fragmentManager = fragmentActivity.getSupportFragmentManager();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -52,6 +60,7 @@ public class ComponentRecyclerViewAdapter extends RecyclerView.Adapter<Component
     public Filter getFilter() { return filter; }
 
     private final Filter filter = new Filter() {
+        @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         protected FilterResults performFiltering(CharSequence charSequence) {
             ArrayList<ListComponent> filteredList = new ArrayList<>();
@@ -59,8 +68,20 @@ public class ComponentRecyclerViewAdapter extends RecyclerView.Adapter<Component
             if (charString.isEmpty()) {
                 filteredList.addAll(mValuesFull);
             } else {
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH);
+
+                LocalDate actualDate = null;
+                if (new GregorianDateMatcher().matches(charString)) {
+                    actualDate = LocalDate.parse(charString, dtf);
+                }
+//                actualDate = LocalDate.parse(charString, dtf);
+
                 for (ListComponent component : mValuesFull) {
-                    if (component.getTitle().toLowerCase().trim().contains(charString)) {
+                    Log.e("COMPONENT_DATE", String.valueOf(component.getPublicationDate()));
+                    Log.e("NEW_DATE", String.valueOf(actualDate));
+                    if (component.getTitle().toLowerCase().trim().contains(charString)
+                            || String.valueOf(component.getPublicationDate()).trim()
+                            .equals(String.valueOf(actualDate).trim())) {
                         filteredList.add(component);
                     }
                 }
@@ -89,6 +110,7 @@ public class ComponentRecyclerViewAdapter extends RecyclerView.Adapter<Component
         public final TextView mContentView;
         public ListComponent mItem;
 
+        @RequiresApi(api = Build.VERSION_CODES.O)
         public ViewHolder(FragmentComponentListItemBinding binding) {
             super(binding.getRoot());
 //            mIdView = binding.itemNumber;
@@ -105,6 +127,19 @@ public class ComponentRecyclerViewAdapter extends RecyclerView.Adapter<Component
         @Override
         public String toString() {
             return super.toString() + " '" + mContentView.getText() + "'";
+        }
+    }
+
+    public class GregorianDateMatcher implements DateMatcher {
+        private Pattern DATE_PATTERN = Pattern.compile(
+                "^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)$"
+                        + "|^(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))$"
+                        + "|^(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))$"
+                        + "|^(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))$");
+
+        @Override
+        public boolean matches(String date) {
+            return DATE_PATTERN.matcher(date).matches();
         }
     }
 }

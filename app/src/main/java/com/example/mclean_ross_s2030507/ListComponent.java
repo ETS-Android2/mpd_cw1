@@ -2,16 +2,17 @@ package com.example.mclean_ross_s2030507;
 
 import androidx.annotation.NonNull;
 
+import java.time.LocalDate;
+
 public class ListComponent {
     // Values are based on request response data values of Traffic Scotland feeds
-    private int id;
     private String title;
     private String description;
     private String link;
     private String geoRssPoint;
     private String author;
     private String comments;
-    private String publicationDate;
+    private LocalDate publicationDate;
 
 
     public ListComponent(String title,
@@ -20,7 +21,7 @@ public class ListComponent {
                          String geoRssPoint,
                          String author,
                          String comments,
-                         String publicationDate) {
+                         LocalDate publicationDate) {
         this.title = title;
         this.description = description;
         this.link = link;
@@ -78,9 +79,9 @@ public class ListComponent {
         this.comments = comments;
     }
 
-    public String getPublicationDate() { return publicationDate; }
+    public LocalDate getPublicationDate() { return publicationDate; }
 
-    public void setPublicationDate(String publicationDate) { this.publicationDate = publicationDate; }
+    public void setPublicationDate(LocalDate publicationDate) { this.publicationDate = publicationDate; }
 
     @NonNull
     public String toString() {
