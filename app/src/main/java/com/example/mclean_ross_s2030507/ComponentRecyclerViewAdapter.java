@@ -56,23 +56,23 @@ public class ComponentRecyclerViewAdapter extends RecyclerView.Adapter<Component
 //        holder.mIdView.setText(mValues.get(position).id);
             holder.mContentView.setText(mValues.get(position).getTitle());
 
-            if (holder.mItem.getTotalTimealotted() <= 10) {
+            if (holder.mItem.getTotalTimeAllotted() > 0 && holder.mItem.getTotalTimeAllotted() <= 10) {
                 holder.mContentView.setTextColor(fragmentActivity.getResources().getColor(R.color.black, Resources.getSystem().newTheme()));
                 holder.mContentView.setBackgroundColor(fragmentActivity.getResources().getColor(R.color.yellow, Resources.getSystem().newTheme()));
             }
-            if (holder.mItem.getTotalTimealotted() > 10 && holder.mItem.getTotalTimealotted() <= 20) {
+            if (holder.mItem.getTotalTimeAllotted() > 10 && holder.mItem.getTotalTimeAllotted() <= 20) {
                 holder.mContentView.setTextColor(fragmentActivity.getResources().getColor(R.color.black, Resources.getSystem().newTheme()));
                 holder.mContentView.setBackgroundColor(fragmentActivity.getResources().getColor(R.color.dark_yellow, Resources.getSystem().newTheme()));
             }
-            if (holder.mItem.getTotalTimealotted() > 20 && holder.mItem.getTotalTimealotted() <= 30) {
+            if (holder.mItem.getTotalTimeAllotted() > 20 && holder.mItem.getTotalTimeAllotted() <= 30) {
                 holder.mContentView.setTextColor(fragmentActivity.getResources().getColor(R.color.white, Resources.getSystem().newTheme()));
                 holder.mContentView.setBackgroundColor(fragmentActivity.getResources().getColor(R.color.orange, Resources.getSystem().newTheme()));
             }
-            if (holder.mItem.getTotalTimealotted() > 30 && holder.mItem.getTotalTimealotted() <= 40) {
+            if (holder.mItem.getTotalTimeAllotted() > 30 && holder.mItem.getTotalTimeAllotted() <= 40) {
                 holder.mContentView.setTextColor(fragmentActivity.getResources().getColor(R.color.white, Resources.getSystem().newTheme()));
                 holder.mContentView.setBackgroundColor(fragmentActivity.getResources().getColor(R.color.tomato, Resources.getSystem().newTheme()));
             }
-            if (holder.mItem.getTotalTimealotted() > 40) {
+            if (holder.mItem.getTotalTimeAllotted() > 40) {
                 holder.mContentView.setTextColor(fragmentActivity.getResources().getColor(R.color.white, Resources.getSystem().newTheme()));
                 holder.mContentView.setBackgroundColor(fragmentActivity.getResources().getColor(R.color.red, Resources.getSystem().newTheme()));
             }

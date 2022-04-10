@@ -1,6 +1,7 @@
 package com.example.mclean_ross_s2030507;
 
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -19,7 +20,7 @@ public class ListComponent {
     private String author;
     private String comments;
     private LocalDate publicationDate;
-    private long totalTimealotted;
+    private long totalTimeAllotted;
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -38,7 +39,7 @@ public class ListComponent {
         this.comments = comments;
         this.publicationDate = publicationDate;
 
-        totalTimealotted = getTotalTimeFromDescription(description);
+        totalTimeAllotted = getTotalTimeFromDescription(description);
     }
 
     public String getTitle() {
@@ -93,9 +94,9 @@ public class ListComponent {
 
     public void setPublicationDate(LocalDate publicationDate) { this.publicationDate = publicationDate; }
 
-    public long getTotalTimealotted() {return totalTimealotted; }
+    public long getTotalTimeAllotted() {return totalTimeAllotted; }
 
-    public void setTotalTimealotted(long totalTimealotted) { this.totalTimealotted = totalTimealotted; }
+    public void setTotalTimeAllotted(long totalTimeAllotted) { this.totalTimeAllotted = totalTimeAllotted; }
 
     @NonNull
     public String toString() {
@@ -104,18 +105,24 @@ public class ListComponent {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public long getTotalTimeFromDescription(String description) {
-        int startDateBeginning = description.indexOf(": ");
-        int startDateEnd = description.indexOf(" - 00:00");
-        String startDate = description.substring(startDateBeginning + 2, startDateEnd).trim();
+        long totalTimeAlottedResult = 0;
+        try {
+            int startDateBeginning = description.indexOf(": ");
+            int startDateEnd = description.indexOf(" - 00:00");
+            String startDate = description.substring(startDateBeginning + 2, startDateEnd).trim();
 
-        int endDateBeginning = description.indexOf("End Date:");
-        int endDateEnd = description.lastIndexOf(" - 00:00");
-        String endDate = description.substring(endDateBeginning + 10, endDateEnd).trim();
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("EEEE, d MMMM yyyy", Locale.ENGLISH);
-        LocalDate firstDate = LocalDate.parse(startDate, dateTimeFormatter);
-        LocalDate lastDate = LocalDate.parse(endDate, dateTimeFormatter);
+            int endDateBeginning = description.indexOf("End Date:");
+            int endDateEnd = description.lastIndexOf(" - 00:00");
+            String endDate = description.substring(endDateBeginning + 10, endDateEnd).trim();
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("EEEE, d MMMM yyyy", Locale.ENGLISH);
+            LocalDate firstDate = LocalDate.parse(startDate, dateTimeFormatter);
+            LocalDate lastDate = LocalDate.parse(endDate, dateTimeFormatter);
 
-        long totalTimeAlotted = firstDate.atStartOfDay().until(lastDate.atStartOfDay(), ChronoUnit.DAYS);
-        return totalTimeAlotted;
+            totalTimeAlottedResult = firstDate.atStartOfDay().until(lastDate.atStartOfDay(), ChronoUnit.DAYS);
+            return totalTimeAlottedResult;
+        } catch (Exception ex) {
+            Log.e("Exception", "getTotalTimeFromDescription exception: " + ex);
+        }
+        return totalTimeAlottedResult;
     }
 }
