@@ -105,7 +105,7 @@ public class ListComponent {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public long getTotalTimeFromDescription(String description) {
-        long totalTimeAlottedResult = 0;
+        long totalTimeAllottedResult = 0;
         try {
             int startDateBeginning = description.indexOf(": ");
             int startDateEnd = description.indexOf(" - 00:00");
@@ -118,11 +118,11 @@ public class ListComponent {
             LocalDate firstDate = LocalDate.parse(startDate, dateTimeFormatter);
             LocalDate lastDate = LocalDate.parse(endDate, dateTimeFormatter);
 
-            totalTimeAlottedResult = firstDate.atStartOfDay().until(lastDate.atStartOfDay(), ChronoUnit.DAYS);
-            return totalTimeAlottedResult;
+            totalTimeAllottedResult = firstDate.atStartOfDay().until(lastDate.atStartOfDay(), ChronoUnit.DAYS);
+            return totalTimeAllottedResult;
         } catch (Exception ex) {
             Log.e("Exception", "getTotalTimeFromDescription exception: " + ex);
         }
-        return totalTimeAlottedResult;
+        return totalTimeAllottedResult;
     }
 }
