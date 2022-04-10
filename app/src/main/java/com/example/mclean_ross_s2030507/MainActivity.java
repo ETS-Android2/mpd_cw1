@@ -194,7 +194,7 @@ public class MainActivity extends AppCompatActivity
                         if (isInsideXmlItem) {
                             description = xpp.nextText();
                             description = description.replace("<br />", "\n");
-                            description = description.replace(" - 00:00", "");
+//                            description = description.replace(" - 00:00", "");
                         }
                     } else if (xpp.getName().equalsIgnoreCase("link")) {
                         if (isInsideXmlItem) link = xpp.nextText();

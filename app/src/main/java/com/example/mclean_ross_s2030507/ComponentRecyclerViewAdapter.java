@@ -1,8 +1,8 @@
 package com.example.mclean_ross_s2030507;
 
 import android.annotation.SuppressLint;
+import android.content.res.Resources;
 import android.os.Build;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.Filter;
@@ -33,11 +33,13 @@ public class ComponentRecyclerViewAdapter extends RecyclerView.Adapter<Component
     private final ArrayList<ListComponent> mValues;
     private final ArrayList<ListComponent> mValuesFull;
     private static FragmentManager fragmentManager;
+    private static FragmentActivity fragmentActivity;
 
     public ComponentRecyclerViewAdapter(FragmentActivity fragmentActivity, ArrayList<ListComponent> items) {
         mValues = items;
         mValuesFull = new ArrayList<>(items);
         fragmentManager = fragmentActivity.getSupportFragmentManager();
+        this.fragmentActivity = fragmentActivity;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -53,6 +55,27 @@ public class ComponentRecyclerViewAdapter extends RecyclerView.Adapter<Component
             holder.mItem = mValues.get(position);
 //        holder.mIdView.setText(mValues.get(position).id);
             holder.mContentView.setText(mValues.get(position).getTitle());
+
+            if (holder.mItem.getTotalTimealotted() <= 10) {
+                holder.mContentView.setTextColor(fragmentActivity.getResources().getColor(R.color.black, Resources.getSystem().newTheme()));
+                holder.mContentView.setBackgroundColor(fragmentActivity.getResources().getColor(R.color.yellow, Resources.getSystem().newTheme()));
+            }
+            if (holder.mItem.getTotalTimealotted() > 10 && holder.mItem.getTotalTimealotted() <= 20) {
+                holder.mContentView.setTextColor(fragmentActivity.getResources().getColor(R.color.black, Resources.getSystem().newTheme()));
+                holder.mContentView.setBackgroundColor(fragmentActivity.getResources().getColor(R.color.dark_yellow, Resources.getSystem().newTheme()));
+            }
+            if (holder.mItem.getTotalTimealotted() > 20 && holder.mItem.getTotalTimealotted() <= 30) {
+                holder.mContentView.setTextColor(fragmentActivity.getResources().getColor(R.color.white, Resources.getSystem().newTheme()));
+                holder.mContentView.setBackgroundColor(fragmentActivity.getResources().getColor(R.color.orange, Resources.getSystem().newTheme()));
+            }
+            if (holder.mItem.getTotalTimealotted() > 30 && holder.mItem.getTotalTimealotted() <= 40) {
+                holder.mContentView.setTextColor(fragmentActivity.getResources().getColor(R.color.white, Resources.getSystem().newTheme()));
+                holder.mContentView.setBackgroundColor(fragmentActivity.getResources().getColor(R.color.tomato, Resources.getSystem().newTheme()));
+            }
+            if (holder.mItem.getTotalTimealotted() > 40) {
+                holder.mContentView.setTextColor(fragmentActivity.getResources().getColor(R.color.white, Resources.getSystem().newTheme()));
+                holder.mContentView.setBackgroundColor(fragmentActivity.getResources().getColor(R.color.red, Resources.getSystem().newTheme()));
+            }
         }
     }
 
@@ -77,8 +100,6 @@ public class ComponentRecyclerViewAdapter extends RecyclerView.Adapter<Component
 //                actualDate = LocalDate.parse(charString, dtf);
 
                 for (ListComponent component : mValuesFull) {
-                    Log.e("COMPONENT_DATE", String.valueOf(component.getPublicationDate()));
-                    Log.e("NEW_DATE", String.valueOf(actualDate));
                     if (component.getTitle().toLowerCase().trim().contains(charString)
                             || String.valueOf(component.getPublicationDate()).trim()
                             .equals(String.valueOf(actualDate).trim())) {
