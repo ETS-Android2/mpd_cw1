@@ -28,6 +28,7 @@
             android:value="${MAPS_API_KEY}" />
 
         <activity
+            android:configChanges="screenLayout|orientation|screenSize"
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

@@ -22,8 +22,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsFragment extends Fragment {
-    private final String geoRssPoint;
-    private final String title;
+    private String geoRssPoint;
+    private String title;
 
     private final OnMapReadyCallback callback = new OnMapReadyCallback() {
 
@@ -48,6 +48,7 @@ public class MapsFragment extends Fragment {
             double lon = Double.parseDouble(geoRssPoint.substring(space + 1));
             LatLng target = new LatLng(lat, lon);
 
+            googleMap.clear();
             googleMap.addMarker(new MarkerOptions().position(target).title(title));
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(target));
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(target, 13));
@@ -58,6 +59,8 @@ public class MapsFragment extends Fragment {
         this.geoRssPoint = geoRssPoint;
         this.title = title;
     }
+
+    public MapsFragment() {}
 
     @Nullable
     @Override
